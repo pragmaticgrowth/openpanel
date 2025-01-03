@@ -22,10 +22,10 @@ cmds = [
   "echo 'NODE_ENV=production' > self-hosting/.env",
   "echo 'SELF_HOSTED=true' >> self-hosting/.env",
   "echo 'GEO_IP_HOST=http://op-geo:8080' >> self-hosting/.env",
-  "echo 'BATCH_SIZE=5000' >> self-hosting/.env",
-  "echo 'BATCH_INTERVAL=10000' >> self-hosting/.env",
+  "echo 'BATCH_SIZE=${BATCH_SIZE}' >> self-hosting/.env",
+  "echo 'BATCH_INTERVAL=${BATCH_INTERVAL}' >> self-hosting/.env",
   "echo 'REDIS_URL=${REDIS_URL}' >> self-hosting/.env",
-  "echo 'CLICKHOUSE_URL=${CLICKHOUSE_URL}' >> self-hosting/.env",
+  "echo 'CLICKHOUSE_URL=http://default:mypassword@clickhouse-12345.up.railway.app:8123/openpanel' >> self-hosting/.env",
   "echo 'DATABASE_URL=${DATABASE_URL}' >> self-hosting/.env",
   "echo 'DATABASE_URL_DIRECT=${DATABASE_URL_DIRECT}' >> self-hosting/.env",
   "echo 'NEXT_PUBLIC_DASHBOARD_URL=https://${RAILWAY_PUBLIC_DOMAIN}' >> self-hosting/.env",
@@ -33,9 +33,11 @@ cmds = [
   "echo 'COOKIE_SECRET=${RESEND_API_KEY}' >> self-hosting/.env",
   # Copy env for build
   "cp self-hosting/.env .env",
-  # Build steps
+  # Run migrations
   "pnpm db:codegen",
-  "pnpm --filter db run migrate:deploy",
+  "pnpm --filter db run migrate:deploy:db",
+  "pnpm --filter db run migrate:deploy:ch",
+  # Build apps
   "pnpm --filter api run build",
   "pnpm --filter public run build"
 ]
