@@ -1,24 +1,17 @@
 [phases.setup]
-nixPkgs = [
-  'nodejs',
-  'pnpm',
-  'python3',
-  'gcc',
-  'g++',
-  'make'
+aptPkgs = [
+  "python3",
+  "build-essential",
+  "make",
+  "gcc",
+  "g++"
 ]
 
 [phases.install]
-cmds = [
-  'python3 --version',
-  'pnpm install --frozen-lockfile'
-]
+cmd = "npm install -g corepack@0.24.1 && corepack enable && pnpm i --frozen-lockfile"
 
 [phases.build]
-cmds = [
-  'pnpm migrate:deploy',
-  'pnpm build'
-]
+cmd = "cd self-hosting && ./setup"
 
-[start]
-cmd = 'pnpm dev'
+[phases.start]
+cmd = "cd self-hosting && ./start"
