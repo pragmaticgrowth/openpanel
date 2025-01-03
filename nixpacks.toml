@@ -1,0 +1,11 @@
+[phases.setup]
+apt_pkgs = ["python3", "build-essential", "make", "gcc", "g++"]
+
+[phases.install]
+cmd = "npm install -g corepack@0.24.1 && corepack enable && pnpm i --frozen-lockfile"
+
+[phases.build]
+cmd = "cd self-hosting && ./setup"
+
+[phases.start]
+cmd = "cd self-hosting && ./start"
