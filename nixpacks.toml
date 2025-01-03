@@ -5,24 +5,18 @@ aptPkgs = [
   "make",
   "gcc",
   "g++",
-  "nodejs"
+  "nodejs",
+  "openssl"
 ]
 
 [phases.install]
-cmds = [
-  "npm install -g corepack@0.24.1",
-  "corepack enable",
-  "pnpm install --frozen-lockfile"
-]
+cmd = "npm install -g corepack@0.24.1 && corepack enable && pnpm i --frozen-lockfile"
 
 [phases.build]
-cmds = [
-  "pnpm migrate:deploy",
-  "pnpm build"
-]
+cmd = "cd self-hosting && ./setup"
 
-[start]
-cmd = "pnpm dev"
+[phases.start]
+cmd = "cd self-hosting && ./start"
 
 [nixpacks]
-start-command = "pnpm dev"
+node-version = "18"
