@@ -13,21 +13,27 @@ aptPkgs = [
 cmds = [
   "npm install -g corepack@0.24.1",
   "corepack enable",
-  # Install workspace dependencies
   "pnpm install --frozen-lockfile"
 ]
 
 [phases.build]
 cmds = [
-  # Generate database types
+  # Setup environment variables with domain
+  "echo 'NEXT_PUBLIC_DASHBOARD_URL=https://op.pragmaticgrowth.com' >> .env",
+  "echo 'NEXT_PUBLIC_API_URL=https://op.pragmaticgrowth.com/api' >> .env",
+  "cat .env.example >> .env",
+  # Database and build steps
   "pnpm db:codegen",
-  # Build the apps
+  "pnpm --filter db run migrate:deploy",
   "pnpm --filter api run build",
   "pnpm --filter public run build"
 ]
 
 [phases.start]
-cmd = "pnpm --filter api start"
+cmd = "pnpm --filter api start:prod"
 
 [nixpacks]
 node-version = "18"
+plan = [
+  "web"
+]
