@@ -10,13 +10,24 @@ aptPkgs = [
 ]
 
 [phases.install]
-cmd = "npm install -g corepack@0.24.1 && corepack enable && pnpm i --frozen-lockfile"
+cmds = [
+  "npm install -g corepack@0.24.1",
+  "corepack enable",
+  # Install workspace dependencies
+  "pnpm install --frozen-lockfile"
+]
 
 [phases.build]
-cmd = "cd self-hosting && ./setup"
+cmds = [
+  # Generate database types
+  "pnpm db:codegen",
+  # Build the apps
+  "pnpm --filter api run build",
+  "pnpm --filter public run build"
+]
 
 [phases.start]
-cmd = "cd self-hosting && ./start"
+cmd = "pnpm --filter api start"
 
 [nixpacks]
 node-version = "18"
