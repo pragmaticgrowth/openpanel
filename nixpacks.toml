@@ -18,11 +18,22 @@ cmds = [
 
 [phases.build]
 cmds = [
-  # Setup environment variables with domain
-  "echo 'NEXT_PUBLIC_DASHBOARD_URL=https://op.pragmaticgrowth.com' >> .env",
-  "echo 'NEXT_PUBLIC_API_URL=https://op.pragmaticgrowth.com/api' >> .env",
-  "cat .env.example >> .env",
-  # Database and build steps
+  # Create self-hosting env file with Railway variables
+  "echo 'NODE_ENV=production' > self-hosting/.env",
+  "echo 'SELF_HOSTED=true' >> self-hosting/.env",
+  "echo 'GEO_IP_HOST=http://op-geo:8080' >> self-hosting/.env",
+  "echo 'BATCH_SIZE=5000' >> self-hosting/.env",
+  "echo 'BATCH_INTERVAL=10000' >> self-hosting/.env",
+  "echo 'REDIS_URL=${REDIS_URL}' >> self-hosting/.env",
+  "echo 'CLICKHOUSE_URL=${CLICKHOUSE_URL}' >> self-hosting/.env",
+  "echo 'DATABASE_URL=${DATABASE_URL}' >> self-hosting/.env",
+  "echo 'DATABASE_URL_DIRECT=${DATABASE_URL_DIRECT}' >> self-hosting/.env",
+  "echo 'NEXT_PUBLIC_DASHBOARD_URL=https://${RAILWAY_PUBLIC_DOMAIN}' >> self-hosting/.env",
+  "echo 'NEXT_PUBLIC_API_URL=https://${RAILWAY_PUBLIC_DOMAIN}/api' >> self-hosting/.env",
+  "echo 'COOKIE_SECRET=${RESEND_API_KEY}' >> self-hosting/.env",
+  # Copy env for build
+  "cp self-hosting/.env .env",
+  # Build steps
   "pnpm db:codegen",
   "pnpm --filter db run migrate:deploy",
   "pnpm --filter api run build",
