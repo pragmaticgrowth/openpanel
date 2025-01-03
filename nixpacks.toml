@@ -1,8 +1,24 @@
 [phases.setup]
-nixPkgs = ['nodejs', 'pnpm']
+nixPkgs = [
+  'nodejs',
+  'pnpm',
+  'python3',
+  'gcc',
+  'g++',
+  'make'
+]
 
 [phases.install]
-cmds = ['pnpm install']
+cmds = [
+  'python3 --version',
+  'pnpm install --frozen-lockfile'
+]
+
+[phases.build]
+cmds = [
+  'pnpm migrate:deploy',
+  'pnpm build'
+]
 
 [start]
 cmd = 'pnpm dev'
