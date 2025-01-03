@@ -1,11 +1,8 @@
 [phases.setup]
-apt_pkgs = ["python3", "build-essential", "make", "gcc", "g++"]
+nixPkgs = ['nodejs', 'pnpm']
 
 [phases.install]
-cmd = "npm install -g corepack@0.24.1 && corepack enable && pnpm i --frozen-lockfile"
+cmds = ['pnpm install']
 
-[phases.build]
-cmd = "cd self-hosting && ./setup"
-
-[phases.start]
-cmd = "cd self-hosting && ./start"
+[start]
+cmd = 'pnpm dev'
